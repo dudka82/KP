@@ -1,13 +1,28 @@
 <?php
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'user_id', 'title', 'description', 'cooking_time',
-        'difficulty', 'servings', 'image_url', 'status'
+        'user_id',
+        'category_id',
+        'title',
+        'description',
+        'cooking_time',
+        'difficulty',
+        'servings',
+        'image_url',
+        'status',
+    ];
+
+    protected $attributes = [
+        'status' => 'pending',
     ];
 
     public function user()
@@ -15,39 +30,35 @@ class Recipe extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ingredients()
+    public function category()
     {
-        return $this->belongsToMany(Ingredient::class, 'recipe_ingredients')
-            ->withPivot('amount', 'unit');
+        return $this->belongsTo(Category::class);
     }
-
-    public function steps()
-    {
-        return $this->hasMany(Step::class);
-    }
-
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
-
     public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
+{
+    return $this->hasMany(Comment::class);
+}   
     public function ratings()
-    {
-        return $this->hasMany(Rating::class);
-    }
+{
+    return $this->hasMany(Rating::class);
+}  
+public function averageRating()
+{
+    return $this->ratings()->avg('rating') ?? 0;
+}
+public function ratingsCount()
+{
+    return $this->ratings()->count();
+} 
+public function ingredients()
+{
+    return $this->belongsToMany(Ingredient::class, 'recipe_ingredients')
+                ->withPivot('amount')
+                ->withTimestamps();
+}   
 
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'recipe_categories');
-    }
-
-    public function averageRating()
-    {
-        return $this->ratings()->avg('rating');
-    }
+public function steps()
+{
+    return $this->hasMany(Step::class)->orderBy('step_number');
+}
 }

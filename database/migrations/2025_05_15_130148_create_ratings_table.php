@@ -18,12 +18,12 @@ return new class extends Migration
     $table->tinyInteger('rating')->unsigned()->between(1, 5);
     $table->timestamps();
     
-    $table->unique(['user_id', 'recipe_id']); // Одна оценка от пользователя
+    $table->unique(['user_id', 'recipe_id']); // чтобы нельзя было добавить дважды
 });
     }
 
     /**
-     * Reverse the migrations.
+  git init   * Reverse the migrations.
      */
     public function down(): void
     {

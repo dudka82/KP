@@ -8,23 +8,26 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, Recipe $recipe)
-    {
-        $request->validate(['text' => 'required|string|max:500']);
-        
-        Comment::create([
-            'user_id' => auth()->id(),
-            'recipe_id' => $recipe->id,
-            'text' => $request->text,
-        ]);
-        
-        return back()->with('success', 'Комментарий добавлен!');
-    }
+   public function store(Request $request, Recipe $recipe)
+{
+    $request->validate([
+        'text' => 'required|string|max:300'
+    ]);
+    
+    $comment = $recipe->comments()->create([
+        'text' => $request->text, 
+        'user_id' => auth()->id()
+    ]);
+    
+    return back()->with('success', 'Комментарий добавлен!');
+}
 
     public function destroy(Comment $comment)
     {
-        $this->authorize('delete', $comment);
+     
+        
         $comment->delete();
-        return back()->with('success', 'Комментарий удален.');
+        
+        return back()->with('success', 'Комментарий удален');
     }
 }

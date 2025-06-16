@@ -3,19 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
-         <link rel="stylesheet" href="/css/style.css">
-
-    <title>Лучшее</title>
-    <style>
-h1 {
-            font-size: 24px;
-            font-weight: normal;
-            text-align: center;
-            margin: auto;        
-} 
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Поиск</title>
 </head>
+<style>
+        h1 {
+            font-size: 24px;
+text-align: center;
+            font-weight: normal;
+        }
+h2{
+font-size: 24px;
+font-weight: normal;
+margin-bottom: 40px;
+}
+p{
+margin: 0;
+margin-bottom: 30px;
+}
+button{
+width: 150px;
+float:right;
+margin: 0;margin-top: 40px;
+}
+</style>
 <body>
     <nav>
         <img src="images/logo.png" alt="logo" class="logo">
@@ -52,14 +63,26 @@ h1 {
         </ul>
     </nav>
     <main>
-        <div class="info">
-            <h3>Откройте для себя мир удивительных рецептов</h3>
-            <h4>Множество рецептов уже ждут вас</h4>
-            <h4>Посмотрите все рецепты, созданные людьми</h4>
-            <button onclick="document.location='/'">Смотреть</button>
+        <div class="SB">
+        <input type="text" class="searchBar" placeholder="Поиск">
+        </div>
+        <div class="sort">
+            <div class="sortBy">
+                    <h2>Выбор по категориям</h2>
+                <div class="SortByCat"></div>
+                <h2>Выбор по ключевым ингредиентам</h2>
+                <div class="SortByIng"></div>
+            </div>
+            <div class="mbCreate">
+                <h2>Желаете стать частью нас</h2>
+                <p>Добавьте свой рецепт и порадуйте сотни пользователей своим кулинарным шедевром</p>
+                <p>Получите шанс попасть на страницу лучших рецептов</p>
+                <p>Оставляйте комментарии и оценки рецептам чтобы продвигать рецепты</p>
+                <button>Создать рецепт</button>
+            </div>
         </div>
         <div class="recipes_list">
-            <h1>Лучшие рецепты</h1>
+            <h1>Все совпадения</h1>
 <div class="container mt-4" style="margin-top:50px">
         <div class="row" id="recipesContainer">
             <?php foreach ($recipes as $recipe): ?>

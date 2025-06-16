@@ -17,7 +17,7 @@ return new class extends Migration
     $table->foreignId('recipe_id')->constrained()->onDelete('cascade');
     $table->timestamps();
     
-    $table->unique(['user_id', 'recipe_id']); // Чтобы нельзя было добавить дважды
+    $table->unique(['user_id', 'recipe_id']); // чтобы нельзя было добавить дважды
 });
     }
 

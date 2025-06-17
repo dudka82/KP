@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
          <link rel="stylesheet" href="/css/style.css">
 
-    <title>Лучшее</title>
+    <title>Избранное</title>
     <style>
 h1 {
             font-size: 24px;
@@ -58,14 +58,14 @@ h1 {
             <h4>Посмотрите все рецепты, созданные людьми</h4>
             <button onclick="document.location='/'">Смотреть</button>
         </div>
-<div class="recipes_list">
-    <h1>Лучшие рецепты</h1>
-                    @if($topRatedRecipes->isEmpty())
-                    <p style="text-align: center;">На данный момент нет подходящих рецептов.</p>
+        <div class="recipes_list">
+            <h1>Избранные рецепты</h1>
+<div class="container mt-4" style="margin-top:50px">
+                        @if($favoriteRecipes->isEmpty())
+                    <p style="text-align: center;">У вас еще нет одобренных рецептов.</p>
                 @else
-    <div class="container mt-4" style="margin-top:50px">
-        <div class="row" id="recipesContainer">
-            @foreach($topRatedRecipes as $recipe)
+    <div class="row" id="recipesContainer">
+        @foreach($favoriteRecipes as $recipe)
                 <div class="col-md-4 mb-4 recipe-card" 
                      data-id="{{ $recipe->id }}"
                      data-title="{{ htmlspecialchars($recipe->title) }}"
@@ -73,8 +73,7 @@ h1 {
                      data-description="{{ htmlspecialchars($recipe->description) }}"
                      data-time="{{ $recipe->cooking_time }}"
                      data-difficulty="{{ $recipe->difficulty }}"
-                     data-servings="{{ $recipe->servings }}"
-                     data-rating="{{ $recipe->average_rating }}">
+                     data-servings="{{ $recipe->servings }}">
                     <div class="card h-100">
                         @if($recipe->image_url)
                             <img src="{{ asset($recipe->image_url) }}" class="card-img-top" alt="{{ $recipe->title }}">
@@ -84,24 +83,20 @@ h1 {
                         <div class="card-body">
                             <h5 class="card-title">{{ htmlspecialchars($recipe->title) }}</h5>
                             <p class="card-text">{{ $recipe->cooking_time }} мин / {{ $recipe->difficulty }}</p>
-                            <div class="rating">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= round($recipe->average_rating))
-                                        <i class="bi bi-star-fill text-warning"></i>
-                                    @else
-                                        <i class="bi bi-star text-warning"></i>
-                                    @endif
-                                @endfor
-                                <span>({{ number_format($recipe->average_rating, 1) }})</span>
-                            </div>
+                            <form action="{{ route('favorites.destroy', $recipe->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" style="margin-bottom:20px;width:150px">Удалить из избранного</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-            @endforeach
-            @endif
-        </div>
+
+        @endforeach
+        @endif
     </div>
 </div>
+    </div>
             </main>   
     <footer>
 <img src="images/logo.png" alt="logo" class="logo">

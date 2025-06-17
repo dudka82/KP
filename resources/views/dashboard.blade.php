@@ -7,18 +7,18 @@
          <link rel="stylesheet" href="/css/style.css">
     <title>Личный кабинет</title>
 </head>
-  <style>
-        button{
-            border-radius:6px;
-            text-align: center;
-            color:#F959C1;
-            background-color: #fff;
-            margin: auto;
-            border:0;
-            height: 30px;
-            width: 100px;
-            margin-top: 25px;margin-bottom: 150px; 
-        }
+<style>
+button{
+border-radius:6px;
+text-align: center;
+color:#F959C1;
+background-color: #fff;
+margin: auto;
+border:0;
+height: 30px;
+width: 100px;
+margin-top: 25px;margin-bottom: 150px; 
+}
 .admin-links {
 margin: 15px 0;
 padding: 10px;
@@ -61,15 +61,15 @@ main{
             background-color: #0E0E0E;
             border-radius:6px;
 }
-    </style>
+</style>
 <body>
     <nav>
         <img src="images/logo.png" alt="logo" class="logo">
         <ul>
             <li><a href="/">Главная</a></li>
-            <li><a href="#">Избранное</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             <li><a href="{{ route('search') }}">Поиск</a></li>
-            <li><a href="#">Лучшее</a></li>
+            <li><a href="/best">Лучшее</a></li>
         </ul>
         <ul>
             <li><a href="/recipes/create">Добавить рецепт</a></li>
@@ -105,7 +105,7 @@ main{
                 <i class="fas fa-list"></i> Модерация рецептов
             </a>
             <a href="{{ route('categories.index') }}" class="admin-link">
-                <i class="fas fa-users"></i> Управление категориями
+                <i class="fas fa-users"></i> Модерация категорий
             </a>
         </div>
     @endif

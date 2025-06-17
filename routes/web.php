@@ -12,7 +12,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/best', [HomeController::class, 'best']);
+Route::get('/best', [HomeController::class, 'topRecipes']);    
+Route::get('/favorite', [FavoriteController::class, 'favoriteRecipes']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -42,6 +43,7 @@ Route::middleware(['admin'])->group(function () {
 });
 // Просмотр рецепта
 Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->name('recipes.show');
+Route::delete('/recipes/{recipe}', [RecipeController::class,'destroy'])->name('recipes.destroy');
 
 // Работа с избранным
 Route::post('/recipes/{recipe}/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
@@ -59,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     // Для обычных пользователей
     Route::resource('categories', CategoryController::class)->only(['create', 'store']);
     
+    Route::delete('/categories/{category}', [CategoryController::class,'destroy'])->name('categories.destroy');
     // Для администраторов
     Route::middleware(['admin'])->group(function () {
         Route::get('/categories', [RecipeController::class, 'index'])->name('categories.index');

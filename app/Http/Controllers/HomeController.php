@@ -14,9 +14,15 @@ class HomeController extends Controller
         $recipes = Recipe::all(); 
         return view('index', compact('recipes'));
     }
-       public function best()
-    {
-        $recipes = Recipe::all(); 
-        return view('welcome', compact('recipes'));
-    }
+public function topRecipes()
+{
+    $topRatedRecipes = Recipe::with(['ratings'])
+    ->where('status','approved')
+        ->withAvg('ratings as average_rating', 'rating')
+        ->orderByDesc('average_rating')
+        ->take(10)
+        ->get();
+
+    return view('welcome', compact('topRatedRecipes'));
+}
 }

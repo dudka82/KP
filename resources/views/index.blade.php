@@ -21,7 +21,7 @@ h1 {
         <img src="images/logo.png" alt="logo" class="logo">
         <ul>
             <li><a href="/">Главная</a></li>
-            <li><a href="#">Избранное</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             <li><a href="{{ route('search') }}">Поиск</a></li>
             <li><a href="/best">Лучшее</a></li>
         </ul>
@@ -61,35 +61,39 @@ h1 {
         <div class="recipes_list">
             <h1>Все рецепты</h1>
 <div class="container mt-4" style="margin-top:50px">
-        <div class="row" id="recipesContainer">
-            <?php foreach ($recipes as $recipe): ?>
-                <div class="col-md-4 mb-4 recipe-card" 
-                     data-id="<?= $recipe->id ?>"
-                     data-title="<?= htmlspecialchars($recipe->title) ?>"
-                     data-image="<?= e($recipe->image_url) ?>"
-                     data-description="<?= htmlspecialchars($recipe->description) ?>"
-                     data-time="<?= $recipe->cooking_time ?>"
-                     data-difficulty="<?= $recipe->difficulty ?>"
-                     data-servings="<?= $recipe->servings ?>">
-                    <div class="card h-100">
-                        <!-- <img src="<?= e($recipe->image_url) ?>" class="card-img-top" alt="<?= htmlspecialchars($recipe->title) ?>">  -->
-                         @if($recipe->image_url)
-            <img src="{{ asset($recipe->image_url) }}" class="card-img-top" alt="{{ $recipe->title }}">
-        @else
-            <img src="{{ asset('images/default.webp') }}" class="card-img-top" alt="Default image">
-        @endif
-                        <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($recipe->title) ?></h5>
-                            <p class="card-text"><?= $recipe->cooking_time ?> мин / <?= $recipe->difficulty ?></p>
-                        </div>
+                @if($recipes->isEmpty())
+                    <p style="text-align: center;">На данный момент нет подходящих рецептов.</p>
+                @else
+    <div class="row" id="recipesContainer">
+        @foreach($recipes->where('status', 'approved') as $recipe)
+            <div class="col-md-4 mb-4 recipe-card" 
+                 data-id="{{ $recipe->id }}"
+                 data-title="{{ htmlspecialchars($recipe->title) }}"
+                 data-image="{{ $recipe->image_url }}"
+                 data-description="{{ htmlspecialchars($recipe->description) }}"
+                 data-time="{{ $recipe->cooking_time }}"
+                 data-difficulty="{{ $recipe->difficulty }}"
+                 data-servings="{{ $recipe->servings }}">
+                <div class="card h-100">
+                    @if($recipe->image_url)
+                        <img src="{{ asset($recipe->image_url) }}" class="card-img-top" alt="{{ $recipe->title }}">
+                    @else
+                        <img src="{{ asset('images/default.webp') }}" class="card-img-top" alt="Default image">
+                    @endif
+                    <div class="card-body">
+                        <h5 class="card-title">{{ htmlspecialchars($recipe->title) }}</h5>
+                        <p class="card-text">{{ $recipe->cooking_time }} мин / {{ $recipe->difficulty }}</p>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
+            </div>
+        @endforeach
+        @endif
+    </div>
+</div>
     </div>
             </main>   
     <footer>
-<img src="images/logo.png" alt="logo" class="logo">
+<img src="/images/logo.png" alt="logo" class="logo">
 <div class="SubInfo">
     <div class="Finfo">
         <h1>Навигация</h1>

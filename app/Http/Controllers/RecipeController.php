@@ -18,8 +18,9 @@ class RecipeController extends Controller
         $approvedRecipes = Recipe::where('status', 'approved')->get();
          $recipes = Recipe::where('status', 'approved')->get(); 
         return view('recipes.index', compact('pendingRecipes', 'approvedRecipes'));
-        return view('index', compact('recipes')); 
+        return view('index', compact('approvedRecipes')); 
     }
+
     
     public function create()
     {
@@ -78,6 +79,12 @@ class RecipeController extends Controller
         'isFavorite' => $isFavorite,
         'userRating' => $userRating
     ]);
+}
+public function destroy(Recipe $recipe){
+            
+        $recipe->delete();
+        
+        return back()->with('success', 'Рецепт удален');
 }
     
     public function approve(Recipe $recipe)

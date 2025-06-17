@@ -8,6 +8,14 @@ use App\Models\Recipe;
 
 class FavoriteController extends Controller
 {
+public function favoriteRecipes()
+{
+    $favoriteRecipes = auth()->user()->favoriteRecipes()
+                          ->where('status', 'approved')
+                          ->get();
+
+    return view('favorite', compact('favoriteRecipes'));
+}
  public function store(Request $request)
     {
         $request->validate([
@@ -58,4 +66,5 @@ public function show(Recipe $recipe)
         return back()->with('success', 'Рецепт добавлен в избранное');
     }
 }
+
 }

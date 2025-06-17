@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','user_id'];
+    protected $fillable = ['title','user_id','status'];
     
     protected $attributes = [
         'status' => 'pending',

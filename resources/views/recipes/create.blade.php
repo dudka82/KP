@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="/css/style.css">
     <title>Добавить рецепт</title>
     <style>
-body{
-
-}
         h1 {
             font-size: 20px;
             margin-left: 130px;margin-bottom: 100px;
@@ -117,11 +114,11 @@ body{
             color:#fff;
         }
         option{
-    background-color: #252525;
-}
-option:hover{
-    background-color: #030303;
-}
+            background-color: #252525;
+        }
+        option:hover{
+            background-color: #030303;
+        }
 
     </style>
 </head>
@@ -130,9 +127,9 @@ option:hover{
         <img src="/images/logo.png" alt="logo" class="logo">
         <ul>
             <li><a href="/">Главная</a></li>
-            <li><a href="#">Избранное</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             <li><a href="{{ route('search') }}">Поиск</a></li>
-            <li><a href="#">Лучшее</a></li>
+            <li><a href="/best">Лучшее</a></li>
         </ul>
         <ul>
             <li><a href="/recipes/create">Добавить рецепт</a></li>
@@ -172,7 +169,7 @@ option:hover{
                                 <label for="category_id" class="col-md-4 col-form-label text-md-right">Категория</label>
                                 <div class="col-md-6">
                                    <select id="category_id" name="category_id" required>
-                                        @foreach($categories as $category)
+        @foreach($categories->where('status', 'approved') as $category)
                                             <option value="{{ $category->id }}">{{ $category->title }}</option>
                                         @endforeach
                                     </select>

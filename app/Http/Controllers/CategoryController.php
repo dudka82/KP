@@ -32,7 +32,12 @@ public function index()
         
         return redirect()->route('dashboard')->with('success', 'Категория отправлена на модерацию!');
     }
-    
+        public function destroy(Category $category)
+    {
+        $category->delete();
+        
+        return back()->with('success', 'Категгория удалена');
+    }
     public function approve(Category $category)
     {
         $category->update(['status' => 'approved']);

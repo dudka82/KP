@@ -206,7 +206,7 @@ h3{
         <img src="/images/logo.png" alt="logo" class="logo">
         <ul>
             <li><a href="/">Главная</a></li>
-            <li><a href="#">Избранное</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             <li><a href="{{ route('search') }}">Поиск</a></li>
             <li><a href="/best">Лучшее</a></li>
         </ul>

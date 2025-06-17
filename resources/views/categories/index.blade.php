@@ -3,98 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+                 <link rel="stylesheet" href="/css/style.css">
     <title>Управление категориями</title>
     <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-                body {
-            margin: 0;  
-            font-family: 'Nunito', sans-serif;
-        }
-        nav {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 70px;
-            border-bottom: 1px solid #000;
-            align-items: center;
-            height: 60px;
-        }
-        ul {
-            display: flex;
-            gap: 100px;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            align-items: center;
-        }
-        li {
-            list-style: none;
-        }
-        a {
-            text-decoration: none;
-            color: #000;
-            transition: color 0.3s;
-        }
-        a:hover {
-            color:rgb(230, 142, 2);
-        }
-        .slider {
-            width: 700px;
-            height: 500px;
-            background: #eee;
-            margin: 20px auto;
-        }
-        h1 {
-            font-size: 24px;
-            margin-left: 200px;
-            font-weight: normal;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-        }
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4b5563;
-            font-weight: bold;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 4px;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -108,12 +19,9 @@
             padding: 15px 20px;
             font-weight: 600;
         }
-        .bg-warning {
-            background-color: #fff3cd;
-        }
-        .bg-success {
-            background-color: #d1e7dd;
-            color: #0f5132;
+        .card-body{
+            background-color: #252525;
+            border-radius:6px;
         }
         .list-group-item {
             padding: 15px;
@@ -160,20 +68,19 @@
 </head>
 <body>
     <nav>
-        <img src="" alt="logo">
+        <img src="/images/logo.png" alt="logo" class="logo">
         <ul>
             <li><a href="/">Главная</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             <li><a href="{{ route('search') }}">Поиск</a></li>
-            <li><a href="">Лучшее</a></li>
+            <li><a href="/best">Лучшее</a></li>
         </ul>
         <ul>
-            <li><a href="/categories/create">Добавить категорию</a></li>
             <li><a href="/recipes/create">Добавить рецепт</a></li>
             <li>
                 @auth
                     <div class="dropdown">
                         <div class="user-info">
-                            <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                             <span>{{ Auth::user()->name }}</span>
                         </div>
                         <div class="dropdown-content">
@@ -195,11 +102,12 @@
         </ul>
     </nav>
     <div class="container">
-        <h1>Управление категориями</h1>
-        
+              <button onclick="document.location='/categories/create'" style="margin:10px;width:150px">Добавить категорию</button>  
+        <h2>Управление категориями</h2>
+
         <div class="card mb-4">
             <div class="card-header bg-warning">
-                <h2>Ожидающие модерации</h2>
+                <h1>Ожидающие модерации</h1>
             </div>
             <div class="card-body">
                 @if($pendingCategories->isEmpty())
@@ -232,7 +140,7 @@
         
         <div class="card">
             <div class="card-header bg-success">
-                <h2>Одобренные категории</h2>
+                <h1>Одобренные категории</h1>
             </div>
             <div class="card-body">
                 @if($approvedCategories->isEmpty())
@@ -245,9 +153,12 @@
                                     <div>
                                         <p class="mb-1">{{ $category->title }}</p>
                                     </div>
-                                    <div>
-                                        <span class="badge badge-success">Одобрен</span>
-                                    </div>
+<form action="{{ route('categories.destroy', $category) }}" method="POST" 
+      onsubmit="return confirmDelete(event, '{{ $category->title }}');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+</form>
                                 </div>
                             </div>
                         @endforeach
@@ -256,5 +167,35 @@
             </div>
         </div>
     </div>
+         <footer style="margin-top: 180px;">
+<img src="/images/logo.png" alt="logo" class="logo">
+<div class="SubInfo">
+    <div class="Finfo">
+        <h1>Навигация</h1>
+           <ul>
+            <li><a href="/">Главная</a></li>  
+            <li><a href="{{ route('dashboard') }}">Личный кабинет</a></li>
+            <li><a href="#">Избранное</a></li>
+            </ul>
+    </div>
+    <div class="Finfo">
+        <h1>Навигация</h1>
+           <ul>
+            <li><a href="{{ route('search') }}">Поиск</a></li>
+            <li><a href="#">Лучшее</a></li>
+            <li><a href="#">Добавить рецепт</a></li>
+            </ul>
+    </div>
+</div>
+    </footer>
+    <script>
+function confirmDelete(event, title) {
+    if (!confirm('Вы уверены, что хотите удалить категорию "' + title + '"?')) {
+        event.preventDefault();
+        return false;
+    }
+    return true;
+}
+</script>
 </body>
 </html>

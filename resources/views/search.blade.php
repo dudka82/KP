@@ -9,32 +9,32 @@
 <style>
         h1 {
             font-size: 24px;
-text-align: center;
+        text-align: center;
             font-weight: normal;
         }
-h2{
-font-size: 24px;
-font-weight: normal;
-margin-bottom: 40px;
-}
-p{
-margin: 0;
-margin-bottom: 30px;
-}
-button{
-width: 150px;
-float:right;
-margin: 0;margin-top: 40px;
-}
+        h2{
+        font-size: 24px;
+        font-weight: normal;
+        margin-bottom: 40px;
+        }
+        p{
+        margin: 0;
+        margin-bottom: 30px;
+        }
+        button{
+        width: 150px;
+        float:right;
+        margin: 0;margin-top: 40px;
+        }
 </style>
 <body>
     <nav>
         <img src="images/logo.png" alt="logo" class="logo">
         <ul>
             <li><a href="/">Главная</a></li>
-            <li><a href="#">Избранное</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             <li><a href="{{ route('search') }}">Поиск</a></li>
-            <li><a href="#">Лучшее</a></li>
+            <li><a href="/best">Лучшее</a></li>
         </ul>
         <ul>
             <li><a href="/recipes/create">Добавить рецепт</a></li>
@@ -62,55 +62,100 @@ margin: 0;margin-top: 40px;
             </li>
         </ul>
     </nav>
-    <main>
-        <div class="SB">
-        <input type="text" class="searchBar" placeholder="Поиск">
-        </div>
-        <div class="sort">
-            <div class="sortBy">
-                    <h2>Выбор по категориям</h2>
-                <div class="SortByCat"></div>
-                <h2>Выбор по ключевым ингредиентам</h2>
-                <div class="SortByIng"></div>
+<main>
+    <div class="SB">
+        <input type="text" class="searchBar" placeholder="Поиск" id="searchInput">
+    </div>
+<div class="sort">
+    <div class="sortBy">
+        <h2>Выбор по категориям</h2>
+        <div class="SortByCat">
+            <div class="category-list">
+                <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="" id="allCategories" checked>
+                    <label class="form-check-label" for="allCategories">
+                        Все категории
+                    </label>
+                </div>
+                @foreach($categories as $category)
+                <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="{{ $category->id }}" id="category{{ $category->id }}">
+                    <label class="form-check-label" for="category{{ $category->id }}">
+                        {{ $category->title }}
+                    </label>
+                </div>
+                @endforeach
             </div>
-            <div class="mbCreate">
-                <h2>Желаете стать частью нас</h2>
-                <p>Добавьте свой рецепт и порадуйте сотни пользователей своим кулинарным шедевром</p>
-                <p>Получите шанс попасть на страницу лучших рецептов</p>
-                <p>Оставляйте комментарии и оценки рецептам чтобы продвигать рецепты</p>
-                <button>Создать рецепт</button>
+        </div>
+
+        <h2>Выбор по ключевым ингредиентам</h2>
+        <div class="SortByIng">
+            <div class="ingredient-list">
+                <div class="form-check">
+                    <input class="form-check-input ingredient-checkbox" type="checkbox" value="" id="allIngredients" checked>
+                    <label class="form-check-label" for="allIngredients">
+                        Все ингредиенты
+                    </label>
+                </div>
+                @foreach($ingredients as $ingredient)
+                <div class="form-check">
+                    <input class="form-check-input ingredient-checkbox" type="checkbox" value="{{ $ingredient->id }}" id="ingredient{{ $ingredient->id }}">
+                    <label class="form-check-label" for="ingredient{{ $ingredient->id }}">
+                        {{ $ingredient->name }}
+                    </label>
+                </div>
+                @endforeach
             </div>
         </div>
-        <div class="recipes_list">
-            <h1>Все совпадения</h1>
-<div class="container mt-4" style="margin-top:50px">
-        <div class="row" id="recipesContainer">
-            <?php foreach ($recipes as $recipe): ?>
+    </div>
+
+        <div class="mbCreate">
+            <h2>Желаете стать частью нас</h2>
+            <p>Добавьте свой рецепт и порадуйте сотни пользователей своим кулинарным шедевром</p>
+            <p>Получите шанс попасть на страницу лучших рецептов</p>
+            <p>Оставляйте комментарии и оценки рецептам чтобы продвигать рецепты</p>
+            <button onclick="window.location.href='/recipes/create'">Создать рецепт</button>
+        </div>
+    </div>
+    <div class="recipes_list">
+        <h1>Все совпадения</h1>
+        <div class="container mt-4" style="margin-top:50px">
+            <div class="row" id="recipesContainer">
+                @foreach($recipes as $recipe)
                 <div class="col-md-4 mb-4 recipe-card" 
-                     data-id="<?= $recipe->id ?>"
-                     data-title="<?= htmlspecialchars($recipe->title) ?>"
-                     data-image="<?= e($recipe->image_url) ?>"
-                     data-description="<?= htmlspecialchars($recipe->description) ?>"
-                     data-time="<?= $recipe->cooking_time ?>"
-                     data-difficulty="<?= $recipe->difficulty ?>"
-                     data-servings="<?= $recipe->servings ?>">
+                     data-id="{{ $recipe->id }}"
+                     data-title="{{ strtolower($recipe->title) }}"
+                     data-image="{{ $recipe->image_url }}"
+                     data-description="{{ strtolower($recipe->description) }}"
+                     data-time="{{ $recipe->cooking_time }}"
+                     data-difficulty="{{ $recipe->difficulty }}"
+                     data-servings="{{ $recipe->servings }}"
+                     data-category="{{ $recipe->category_id }}"
+                     data-ingredients="{{ $recipe->ingredients->pluck('id')->implode(',') }}">
                     <div class="card h-100">
-                        <!-- <img src="<?= e($recipe->image_url) ?>" class="card-img-top" alt="<?= htmlspecialchars($recipe->title) ?>">  -->
-                         @if($recipe->image_url)
-            <img src="{{ asset($recipe->image_url) }}" class="card-img-top" alt="{{ $recipe->title }}">
-        @else
-            <img src="{{ asset('images/default.webp') }}" class="card-img-top" alt="Default image">
-        @endif
+                        @if($recipe->image_url)
+                            <img src="{{ asset($recipe->image_url) }}" class="card-img-top" alt="{{ $recipe->title }}">
+                        @else
+                            <img src="{{ asset('images/default.webp') }}" class="card-img-top" alt="Default image">
+                        @endif
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($recipe->title) ?></h5>
-                            <p class="card-text"><?= $recipe->cooking_time ?> мин / <?= $recipe->difficulty ?></p>
+                            <h5 class="card-title">{{ $recipe->title }}</h5>
+                            <p class="card-text">{{ $recipe->cooking_time }} мин / {{ $recipe->difficulty }}</p>
+                            <div class="recipe-meta">
+                                <span class="badge bg-primary">{{ $recipe->category->name }}</span>
+                                @foreach($recipe->ingredients->take(3) as $ingredient)
+                                    <span class="badge bg-secondary">{{ $ingredient->name }}</span>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+                @endforeach
+            </div>
         </div>
     </div>
-            </main>   
+</main>
+
     <footer>
 <img src="images/logo.png" alt="logo" class="logo">
 <div class="SubInfo">
@@ -210,6 +255,88 @@ margin: 0;margin-top: 40px;
             });
         });
     </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Получаем все необходимые элементы
+    const searchInput = document.getElementById('searchInput');
+    const allCategoriesCheckbox = document.getElementById('allCategories');
+    const categoryCheckboxes = document.querySelectorAll('.category-checkbox:not(#allCategories)');
+    const allIngredientsCheckbox = document.getElementById('allIngredients');
+    const ingredientCheckboxes = document.querySelectorAll('.ingredient-checkbox:not(#allIngredients)');
+    const recipeCards = document.querySelectorAll('.recipe-card');
+
+    // Обработка чекбоксов категорий
+    allCategoriesCheckbox.addEventListener('change', function() {
+        categoryCheckboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        filterRecipes();
+    });
+    
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                allCategoriesCheckbox.checked = false;
+            }
+            filterRecipes();
+        });
+    });
+    
+    // Обработка чекбоксов ингредиентов
+    allIngredientsCheckbox.addEventListener('change', function() {
+        ingredientCheckboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        filterRecipes();
+    });
+    
+    ingredientCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                allIngredientsCheckbox.checked = false;
+            }
+            filterRecipes();
+        });
+    });
+
+    // Обработка поисковой строки
+    searchInput.addEventListener('input', filterRecipes);
+
+    // Функция фильтрации
+    function filterRecipes() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked:not(#allCategories)'))
+            .map(checkbox => checkbox.value);
+        const selectedIngredients = Array.from(document.querySelectorAll('.ingredient-checkbox:checked:not(#allIngredients)'))
+            .map(checkbox => checkbox.value);
+        
+        recipeCards.forEach(card => {
+            const title = card.dataset.title.toLowerCase();
+            const description = card.dataset.description.toLowerCase();
+            const category = card.dataset.category;
+            const ingredients = card.dataset.ingredients.split(',');
+            
+            // Проверяем соответствие всем критериям
+            const matchesSearch = !searchTerm || 
+                               title.includes(searchTerm) || 
+                               description.includes(searchTerm);
+            
+            const matchesCategory = selectedCategories.length === 0 || 
+                                 selectedCategories.includes(category);
+            
+            const matchesIngredient = selectedIngredients.length === 0 || 
+                                    selectedIngredients.some(ing => ingredients.includes(ing));
+            
+            // Показываем/скрываем карточку в зависимости от соответствия фильтрам
+            card.style.display = (matchesSearch && matchesCategory && matchesIngredient) ? 
+                               'block' : 'none';
+        });
+    }
+
+    // Инициализируем фильтрацию при загрузке
+    filterRecipes();
+});
+</script>
     
 </body>
 </html>

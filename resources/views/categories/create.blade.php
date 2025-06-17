@@ -3,97 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+                 <link rel="stylesheet" href="/css/style.css">
     <title>Добавить категорию</title>
     <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f8f9fa;
-        }
-                body {
-            margin: 0;  
-            font-family: 'Nunito', sans-serif;
-        }
-        nav {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 70px;
-            border-bottom: 1px solid #000;
-            align-items: center;
-            height: 60px;
-        }
-        ul {
-            display: flex;
-            gap: 100px;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            align-items: center;
-        }
-        li {
-            list-style: none;
-        }
-        a {
-            text-decoration: none;
-            color: #000;
-            transition: color 0.3s;
-        }
-        a:hover {
-            color:rgb(230, 142, 2);
-        }
-        .slider {
-            width: 700px;
-            height: 500px;
-            background: #eee;
-            margin: 20px auto;
-        }
         h1 {
-            font-size: 24px;
-            margin-left: 200px;
+            font-size: 20px;
+            margin-left: 130px;margin-bottom: 100px;
             font-weight: normal;
         }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-        }
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4b5563;
-            font-weight: bold;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 4px;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+
         .container {
             padding: 20px;
         }
@@ -101,14 +19,10 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .card-header {
-            padding: 15px 20px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid rgba(0,0,0,.125);
-            font-weight: 600;
-        }
         .card-body {
-            padding: 20px;
+            background-color: #252525;
+            padding: 30px 100px;
+            box-sizing:border-box;
         }
         .form-group {
             margin-bottom: 20px;
@@ -119,17 +33,18 @@
             padding: 8px 12px;
             font-size: 16px;
             line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
+            color: #fff;
+            background-color: #030303;
             background-clip: padding-box;
-            border: 1px solid #ced4da;
+            border: none;
             border-radius: 4px;
             transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
         }
         .form-control:focus {
-            border-color: #80bdff;
+            border-color: #F959C1;
+
             outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            box-shadow: 0 0 0 0.2rem #F959C1;
         }
         .is-invalid {
             border-color: #dc3545;
@@ -149,26 +64,23 @@
             vertical-align: middle;
             user-select: none;
             border: 1px solid transparent;
-            padding: 8px 16px;
+            padding: 4px 16px;
             font-size: 16px;
+            width: 200px;
             line-height: 1.5;
             border-radius: 4px;
+            margin-bottom: 10px;
             transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
         }
         .btn-primary {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
+            color: #F959C1;
+            background-color: #fff;
+            border: none;
+            width: 250px;
         }
         .btn-primary:hover {
-            background-color: #0069d9;
-            border-color: #0062cc;
-        }
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
+            color:#fff ;
+            background-color:#F959C1 ;
         }
         .col-md-8 {
             flex: 0 0 66.666667%;
@@ -186,7 +98,7 @@
             justify-content: center;
         }
         .text-md-right {
-            text-align: right;
+            text-align: left;
         }
         .offset-md-4 {
             margin-left: 33.333333%;
@@ -197,36 +109,33 @@
         textarea.form-control {
             min-height: 100px;
         }
-        @media (max-width: 768px) {
-            .col-md-4, .col-md-6, .col-md-8 {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-            .text-md-right {
-                text-align: left;
-            }
-            .offset-md-4 {
-                margin-left: 0;
-            }
+        select{
+            background-color: #030303;
+            color:#fff;
         }
+        option{
+    background-color: #252525;
+}
+option:hover{
+    background-color: #030303;
+}
     </style>
 </head>
 <body>
     <nav>
-        <img src="" alt="logo">
+        <img src="/images/logo.png" alt="logo" class="logo">
         <ul>
             <li><a href="/">Главная</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             <li><a href="{{ route('search') }}">Поиск</a></li>
-            <li><a href="">Лучшее</a></li>
+            <li><a href="/best">Лучшее</a></li>
         </ul>
         <ul>
-            <li><a href="/categories/create">Добавить категорию</a></li>
             <li><a href="/recipes/create">Добавить рецепт</a></li>
             <li>
                 @auth
                     <div class="dropdown">
                         <div class="user-info">
-                            <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                             <span>{{ Auth::user()->name }}</span>
                         </div>
                         <div class="dropdown-content">
@@ -251,7 +160,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Добавить новую категорию</div>
+                    <h1>Создание категории</h1>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('categories.store') }}">
@@ -281,5 +190,26 @@
             </div>
         </div>
     </div>
+    <footer style="margin-top:180px">
+<img src="/images/logo.png" alt="logo" class="logo">
+<div class="SubInfo">
+    <div class="Finfo">
+        <h1>Навигация</h1>
+           <ul>
+            <li><a href="/">Главная</a></li>  
+            <li><a href="{{ route('dashboard') }}">Личный кабинет</a></li>
+            <li><a href="#">Избранное</a></li>
+            </ul>
+    </div>
+    <div class="Finfo">
+        <h1>Навигация</h1>
+           <ul>
+            <li><a href="{{ route('search') }}">Поиск</a></li>
+            <li><a href="#">Лучшее</a></li>
+            <li><a href="#">Добавить рецепт</a></li>
+            </ul>
+    </div>
+</div>
+    </footer>
 </body>
 </html>

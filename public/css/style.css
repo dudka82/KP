@@ -268,3 +268,13 @@ border: none;
     box-sizing: border-box;
     padding: 50px;
 }
+.SortByCat, .SortByIng{
+    background-color: #0E0E0E;
+    border: none;
+}
+.category-list, .ingredient-list{
+  max-height: 200px; 
+  overflow-y: auto; 
+  padding: 25px 30px;
+  border-radius: 6px;
+}

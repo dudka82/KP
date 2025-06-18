@@ -7,6 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
     <style>
+        .card{
+            border:none;
+            border-radius:6px;
+        }
         .recipe-header {
             margin-bottom: 30px;
 
@@ -22,11 +26,9 @@
         }
         .comment-section {
             margin-top: 40px;
-            border-top: 1px solid #eee;
             padding-top: 20px;
         }
         .comment {
-            border-bottom: 1px solid #eee;
             padding: 15px 0;
         }
         .action-buttons {
@@ -130,20 +132,20 @@
             display: none;
             position: absolute;
             right: 0;
-            background-color: #f9f9f9;
+            background-color: #252525;
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
             border-radius: 4px;
     }
     .dropdown-content a {
-            color: black;
+            color: #fff;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
     }
     .dropdown-content a:hover {
-            background-color: #f1f1f1;
+            background-color: #030303;
     }
     .dropdown:hover .dropdown-content {
             display: block;
@@ -275,7 +277,7 @@ h3{
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ $ingredient->name }}
                         @if($ingredient->pivot->amount)
-                            <span class="badge rounded-pill" style="background-color:#fff;color:#F959C1;"> {{ $ingredient->pivot->amount }} шт</span>
+                            <span class="badge rounded-pill" style="background-color:#fff;color:#F959C1;"> {{ $ingredient->pivot->amount }}</span>
                         @endif
                     </li>
                 @endforeach
@@ -331,7 +333,7 @@ h3{
                         <h3 class="mb-0">Информация</h3>
                     </div>
                     <div class="card-body">
-                        <p><strong>Категория:</strong> {{ $recipe->category->name }}</p>
+                        <p><strong>Категория:</strong> {{ $recipe->category->title }}</p>
                         <p><strong>Автор:</strong> {{ $recipe->user->name }}</p>
                         <p><strong>Дата добавления:</strong> {{ $recipe->created_at->format('d.m.Y') }}</p>
                     </div>
@@ -391,7 +393,7 @@ h3{
             @csrf
             <div class="form-group">
                 <textarea name="text" class="form-control" rows="3" 
-                          placeholder="Оставьте ваш комментарий..." required style="background-color:#252525;color:#fff"></textarea>
+                          placeholder="Оставьте ваш комментарий..." required style="background-color:#252525;color:#fff;border:none"></textarea>
             </div>
             <button type="submit" class="btn btn-primary mt-2">Отправить</button>
         </form>
@@ -404,8 +406,8 @@ h3{
     <div class="comments-list">
         @forelse($recipe->comments()->with('user')->latest()->get() as $comment)
             <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
+                <div class="card-body" style="border:none;border-radius:6px">
+                    <div class="d-flex justify-content-between align-items-start" >
                         <div class="d-flex align-items-center">
                             <div class="user-avatar me-2">
                                 @if($comment->user->avatar)
@@ -445,7 +447,7 @@ h3{
                 </div>
             </div>
         @empty
-            <div class="alert alert-secondary" style="background-color:#252525;color:#fff">Пока нет комментариев. Будьте первым!</div>
+            <div class="alert alert-secondary" style="background-color:#252525;color:#fff;border:none">Пока нет комментариев. Будьте первым!</div>
         @endforelse
     </div>
 </div>

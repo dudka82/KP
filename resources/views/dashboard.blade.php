@@ -17,7 +17,7 @@ margin: auto;
 border:0;
 height: 30px;
 width: 100px;
-margin-top: 25px;margin-bottom: 150px; 
+
 }
 .admin-links {
 margin: 15px 0;
@@ -52,14 +52,84 @@ main{
             justify-content: center;
             gap:130px;
 }
-.UF, .UC{
-            background-color: #0E0E0E;
-            border-radius:6px;
+.UF, .UC {
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #0E0E0E;
+}
+
+.UF .list-group, .UC .list-group {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.UF .list-group li, .UC .list-group li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.UF .list-group li:last-child , .UC .list-group li:last-child {
+    border-bottom: none;
+}
+
+.UF .list-group a, .UC .list-group a {
+    text-decoration: none;
+    color: #fff;
+    flex-grow: 1;
+}
+.UF .list-group a:hover, .UC .list-group a:hover {
+    text-decoration: none;
+    color: #F959C1;
+    flex-grow: 1;
+}
+.UF .list-group button , .UC .list-group button{
+    background-color: #fff;
+    color: #F959C1;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.UF .list-group button:hover, .UC .list-group button:hover {
+    background-color: #F959C1;
+    color:#fff;
+}
+
+.UF p.empty-message, .UC p.empty-message {
+    padding: 10px;
+    color: #666;
+    text-align: center;
 }
 .UAI{
             width: 692px;height: 326px;
             background-color: #0E0E0E;
             border-radius:6px;
+}
+main li{
+    width: 293px;
+    display:flex;
+    justify-content: space-between;
+    padding:0;
+}
+main li:last-child{
+    padding-bottom:20px;
+}
+.list-group{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.card-body{
+    padding: 20px;
 }
 </style>
 <body>
@@ -102,31 +172,78 @@ main{
     @if(auth()->user()->role === 'admin')
         <div class="admin-links">
             <a href="{{ route('recipes.index') }}" class="admin-link">
-                <i class="fas fa-list"></i> Модерация рецептов
+                <i ></i> Модерация рецептов
             </a>
             <a href="{{ route('categories.index') }}" class="admin-link">
-                <i class="fas fa-users"></i> Модерация категорий
+                <i ></i> Модерация категорий
             </a>
         </div>
     @endif
 @endauth
     </div>
     <main>
-        <div class="User-favCreate">
-            <div class="User-fav">
-                <h1>Список избранных рецептов</h1>
-                <div class="UF"></div>
-
-            </div>
-            <div class="User-create">
-                <h1>Список созданных рецептов</h1>
-                <div class="UC"></div>
+<div class="User-favCreate">
+    <div class="User-fav">
+        <h1>Список избранных рецептов</h1>
+        <div class="UF">
+            @if($favoriteRecipes->isEmpty())
+                <p>У вас пока нет избранных рецептов</p>
+            @else
+                <ul class="list-group">
+                    @foreach($favoriteRecipes as $recipe)
+                        <li >
+                            <a href="{{ route('recipes.show', $recipe->id) }}"> {{ Str::limit($recipe->title, 6) }}</a>
+                            <form action="{{ route('favorites.destroy', $recipe->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="width:150px;font-size:12px" >Удалить из избранного</button>
+                            </form>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+    </div>
+    <div class="User-create">
+        <h1>Список созданных рецептов</h1>
+        <div class="UC">
+            @if($createdRecipes->isEmpty())
+                <p>Вы еще не создали ни одного рецепта</p>
+            @else
+                <ul class="list-group">
+                    @foreach($createdRecipes as $recipe)
+                        <li>
+                            <a href="{{ route('recipes.show', $recipe->id) }}"> {{ Str::limit($recipe->title, 6) }}</a>
+                            <div>
+                                <form action="{{ route('recipes.destroy', $recipe->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"  onclick="return confirm('Вы уверены, что хотите удалить этот рецепт?')">Удалить</button>
+                                </form>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+    </div>
+</div>
+<div class="User-accountInfo">
+    <h1>Информация об аккаунте</h1>
+    <div class="UAI">
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Имя:</strong> {{ Auth::user()->name }}</p>
+                <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
+                <p><strong>Дата регистрации:</strong> {{ Auth::user()->created_at->format('d.m.Y') }}</p>
+                <p><strong>Всего оставленных оценок:</strong> {{ $ratingsCount }}</p>
+                <p><strong>Всего оставленных комментариев:</strong> {{ $commentsCount }}</p>
+                <p><strong>Всего добавленных в избранное:</strong> {{ $favoriteRecipes->count() }}</p>
+                <p><strong>Всего созданных рецептов:</strong> {{ $createdRecipes->count() }}</p>
             </div>
         </div>
-        <div class="User-accountInfo">
-            <h1>Информация об аккаунте</h1>
-            <div class="UAI"></div>
-        </div>
+    </div>
+</div>
     </main>
         <footer>
 <img src="images/logo.png" alt="logo" class="logo">

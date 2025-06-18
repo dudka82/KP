@@ -258,78 +258,88 @@
                                 </div>
                             </div>
                             
-        <div class="form-group row">
-            <label class="col-md-4 col-form-label text-md-right">Ингредиенты</label>
-            <div class="col-md-6">
-                <div id="ingredients-container">
-                    @if(old('ingredients'))
-                        @foreach(old('ingredients') as $index => $ingredient)
-                            <div class="ingredient-group mb-2">
-                                <div class="input-group">
-                                    <select name="ingredients[{{ $index }}][id]" class="form-control margin-bottom:20px">
-                                        <option value="">Выберите ингредиент</option>
-                                        @foreach($allIngredients as $ing)
-                                            <option value="{{ $ing->id }}" {{ $ingredient['id'] == $ing->id ? 'selected' : '' }}>{{ $ing->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input type="text" name="ingredients[{{ $index }}][amount]" class="form-control" placeholder="Количество" value="{{ $ingredient['amount'] ?? '' }}">
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-danger remove-ingredient">Удалить</button>
+                            <!-- Секция ингредиентов -->
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">Ингредиенты</span></label>
+                                <div class="col-md-6">
+                                    <div id="ingredients-container">
+                                        @if(old('ingredients'))
+                                            @foreach(old('ingredients') as $index => $ingredient)
+                                                <div class="ingredient-group mb-2">
+                                                    <div class="input-group">
+                                                        <select name="ingredients[{{ $index }}][id]" class="form-control ingredient-select" required>
+                                                            <option value="">Выберите ингредиент</option>
+                                                            @foreach($allIngredients as $ing)
+                                                                <option value="{{ $ing->id }}" {{ $ingredient['id'] == $ing->id ? 'selected' : '' }}>{{ $ing->name }}</option>
+                                                            @endforeach
+                                                        </select><br>
+                                                        <input type="text" name="ingredients[{{ $index }}][amount]" class="form-control ingredient-amount" placeholder="Количество" value="{{ $ingredient['amount'] ?? '' }}" required>
+                                                        <div class="input-group-append">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="ingredient-error text-danger small" style="display: none;"></div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="ingredient-group mb-2">
+                                                <div class="input-group">
+                                                    <select name="ingredients[0][id]" class="form-control ingredient-select" required>
+                                                        <option value="">Выберите ингредиент</option>
+                                                        @foreach($allIngredients as $ingredient)
+                                                            <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                                                        @endforeach
+                                                    </select><br>
+                                                    <input type="text" name="ingredients[0][amount]" class="form-control ingredient-amount" placeholder="Количество" required>
+                                                    <div class="input-group-append">
+
+                                                    </div>
+                                                </div>
+                                                <div class="ingredient-error text-danger small" style="display: none;"></div>
+                                            </div>
+                                        @endif
                                     </div>
+                                    <button type="button" id="add-ingredient" class="btn btn-secondary mt-2">Добавить ингредиент</button>
+                                    <div id="ingredients-error" class="text-danger small" style="display: none;"></div>
+                                    @error('ingredients')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
-                        @endforeach
-                    @else
-                        <div class="ingredient-group mb-2">
-                            <div class="input-group">
-                                <select name="ingredients[0][id]" class="form-control margin-bottom:20px">
-                                    <option value="">Выберите ингредиент</option>
-                                    @foreach($allIngredients as $ingredient)
-                                        <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="text" name="ingredients[0][amount]" class="form-control" placeholder="Количество">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-danger remove-ingredient">Удалить</button>
+
+                            <!-- Секция шагов приготовления -->
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">Шаги приготовления</label>
+                                <div class="col-md-6">
+                                    <div id="steps-container">
+                                        @if(old('steps'))
+                                            @foreach(old('steps') as $index => $step)
+                                                <div class="step-group mb-3">
+                                                    <label>Шаг {{ $index + 1 }}</label>
+                                                    <textarea name="steps[{{ $index }}][description]" class="form-control step-description" rows="2" required>{{ $step['description'] }}</textarea>
+                                                    <div class="step-error text-danger small" style="display: none;"></div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="step-group mb-3">
+                                                <label>Шаг 1</label>
+                                                <textarea name="steps[0][description]" class="form-control step-description" rows="2" required></textarea>
+                                                <div class="step-error text-danger small" style="display: none;"></div>
+
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <button type="button" id="add-step" class="btn btn-secondary mt-2">Добавить шаг</button>
+                                    <div id="steps-error" class="text-danger small" style="display: none;"></div>
+                                    @error('steps')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
-                        </div>
-                    @endif
-                </div>
-                <button type="button" id="add-ingredient" class="btn btn-sm btn-secondary mt-2">Добавить ингредиент</button>
-            </div>
-        </div>
-
-        <!-- Секция шагов приготовления -->
-        <div class="form-group row">
-            <label class="col-md-4 col-form-label text-md-right">Шаги приготовления </label>
-            <div class="col-md-6">
-                <div id="steps-container">
-                    @if(old('steps'))
-                        @foreach(old('steps') as $index => $step)
-                            <div class="step-group mb-3">
-                                <label>Шаг {{ $index + 1 }}</label>
-                                <textarea name="steps[{{ $index }}][description]" class="form-control mb-2" rows="2">{{ $step['description'] }}</textarea>
-                                <button type="button" class="btn btn-sm btn-danger remove-step">Удалить шаг</button>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="step-group mb-3">
-                            <label>Шаг 1</label>
-                            <textarea name="steps[0][description]" class="form-control mb-2" rows="2"></textarea>
-                            <button type="button" class="btn btn-sm btn-danger remove-step">Удалить шаг</button>
-                        </div>
-                    @endif
-                </div>
-                <button type="button" id="add-step" class="btn btn-sm btn-secondary mt-2">Добавить шаг</button>
-                @error('steps')
-                    <span class="invalid-feedback d-block" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-        </div>
-
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
@@ -367,56 +377,143 @@
     </footer>
 </body>
 <!-- JavaScript для динамического добавления полей -->
-<script>
-    // Добавление ингредиента
-    document.getElementById('add-ingredient').addEventListener('click', function() {
-        const container = document.getElementById('ingredients-container');
-        const index = container.querySelectorAll('.ingredient-group').length;
-        
-        const div = document.createElement('div');
-        div.className = 'ingredient-group mb-2';
-        div.innerHTML = `
-            <div class="input-group">
-                <select name="ingredients[${index}][id]" class="form-control">
-                    <option value="">Выберите ингредиент</option>
-                    @foreach($allIngredients as $ingredient)
-                        <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
-                    @endforeach
-                </select>
-                <input type="text" name="ingredients[${index}][amount]" class="form-control" placeholder="Количество">
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-danger remove-ingredient">Удалить</button>
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Добавление ингредиента
+        document.getElementById('add-ingredient').addEventListener('click', function() {
+            const container = document.getElementById('ingredients-container');
+            const index = container.querySelectorAll('.ingredient-group').length;
+            
+            const div = document.createElement('div');
+            div.className = 'ingredient-group mb-2';
+            div.innerHTML = `
+                <div class="input-group">
+                    <select name="ingredients[${index}][id]" class="form-control ingredient-select" required>
+                        <option value="">Выберите ингредиент</option>
+                        @foreach($allIngredients as $ingredient)
+                            <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                        @endforeach
+                    </select><br>
+                    <input type="text" name="ingredients[${index}][amount]" class="form-control ingredient-amount" placeholder="Количество" required>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-danger remove-ingredient" style="margin-bottom:5px">Удалить</button>
+                    </div>
                 </div>
-            </div>
-        `;
-        
-        container.appendChild(div);
-    });
+                <div class="ingredient-error text-danger small" style="display: none;"></div>
+            `;
+            
+            container.appendChild(div);
+        });
 
-    // Добавление шага
-    document.getElementById('add-step').addEventListener('click', function() {
-        const container = document.getElementById('steps-container');
-        const index = container.querySelectorAll('.step-group').length;
-        
-        const div = document.createElement('div');
-        div.className = 'step-group mb-3';
-        div.innerHTML = `
-            <label>Шаг ${index + 1}</label>
-            <textarea name="steps[${index}][description]" class="form-control mb-2" rows="2"></textarea>
-            <button type="button" class="btn btn-sm btn-danger remove-step">Удалить шаг</button>
-        `;
-        
-        container.appendChild(div);
-    });
+        // Добавление шага
+        document.getElementById('add-step').addEventListener('click', function() {
+            const container = document.getElementById('steps-container');
+            const index = container.querySelectorAll('.step-group').length;
+            
+            const div = document.createElement('div');
+            div.className = 'step-group mb-3';
+            div.innerHTML = `
+                <label>Шаг ${index + 1}</label>
+                <textarea name="steps[${index}][description]" class="form-control step-description" rows="2" required></textarea>
+                <div class="step-error text-danger small" style="display: none;"></div>
+                <button type="button" class="btn btn-sm btn-danger remove-step mt-2">Удалить шаг</button>
+            `;
+            
+            container.appendChild(div);
+        });
 
-    // Удаление полей
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-ingredient')) {
-            e.target.closest('.ingredient-group').remove();
+        // Удаление полей
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-ingredient')) {
+                e.target.closest('.ingredient-group').remove();
+                validateForm();
+            }
+            if (e.target.classList.contains('remove-step')) {
+                e.target.closest('.step-group').remove();
+                validateForm();
+            }
+        });
+
+        // Валидация формы
+        document.getElementById('recipe-form').addEventListener('submit', function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            
+            // Валидация ингредиентов
+            const ingredientsError = document.getElementById('ingredients-error');
+            const ingredientGroups = document.querySelectorAll('.ingredient-group');
+            
+            if (ingredientGroups.length === 0) {
+                ingredientsError.textContent = 'Добавьте хотя бы один ингредиент';
+                ingredientsError.style.display = 'block';
+                isValid = false;
+            } else {
+                ingredientsError.style.display = 'none';
+                
+                ingredientGroups.forEach(group => {
+                    const select = group.querySelector('.ingredient-select');
+                    const amount = group.querySelector('.ingredient-amount');
+                    const error = group.querySelector('.ingredient-error');
+                    
+                    if (!select.value || !amount.value) {
+                        error.textContent = 'Заполните все поля ингредиента';
+                        error.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        error.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Валидация шагов
+            const stepsError = document.getElementById('steps-error');
+            const stepGroups = document.querySelectorAll('.step-group');
+            
+            if (stepGroups.length === 0) {
+                stepsError.textContent = 'Добавьте хотя бы один шаг приготовления';
+                stepsError.style.display = 'block';
+                isValid = false;
+            } else {
+                stepsError.style.display = 'none';
+                
+                stepGroups.forEach(group => {
+                    const textarea = group.querySelector('.step-description');
+                    const error = group.querySelector('.step-error');
+                    
+                    if (!textarea.value.trim()) {
+                        error.textContent = 'Описание шага не может быть пустым';
+                        error.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        error.style.display = 'none';
+                    }
+                });
+            }
+            
+            return isValid;
         }
-        if (e.target.classList.contains('remove-step')) {
-            e.target.closest('.step-group').remove();
-        }
+
+        // Валидация при изменении полей
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('ingredient-select') || 
+                e.target.classList.contains('ingredient-amount') ||
+                e.target.classList.contains('step-description')) {
+                validateForm();
+            }
+        });
+
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('ingredient-select') || 
+                e.target.classList.contains('ingredient-amount') ||
+                e.target.classList.contains('step-description')) {
+                validateForm();
+            }
+        });
     });
-</script>
+    </script>
 </html>

@@ -20,10 +20,10 @@
             font-weight: 600;
         }
         .card-body{
-            background-color: #252525;
             border-radius:6px;
         }
         .list-group-item {
+                       background-color: #252525;
             padding: 15px;
             border-left: none;
             border-right: none;
@@ -64,6 +64,58 @@
             font-size: 12px;
             color: #6c757d;
         }
+          .recipe-block {
+        cursor: pointer;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .recipe-block:hover {
+        background-color: #f5f5f5;
+        color: #000;
+    }
+    
+    .recipe-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .overlay-content {
+        background-color: #030303;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .recipe-image {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+    }
     </style>
 </head>
 <body>
@@ -104,46 +156,97 @@
     <div class="container">
         <h2>Управление рецептами</h2>
         
-        <div class="card mb-4">
-            <div class="card-header bg-warning">
-                <h1>Ожидающие модерации</h1>
-            </div>
-            <div class="card-body">
-                @if($pendingRecipes->isEmpty())
-                    <p>Нет рецептов, ожидающих модерации.</p>
-                @else
-                    <div class="list-group">
-                        @foreach($pendingRecipes as $recipe)
-                            <div class="list-group-item">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5>{{ $recipe->title }}</h5>
-                                        <p class="mb-1">{{ Str::limit($recipe->description, 100) }}</p>
-                                        <small>
-                                            Категория: {{ $recipe->category->name }}, 
-                                            Время: {{ $recipe->cooking_time }} мин,
-                                            Сложность: {{ $recipe->difficulty }},
-                                            Порции: {{ $recipe->servings }}
-                                        </small>
-                                    </div>
-                                    <div>
-                                        <form action="{{ route('recipes.approve', $recipe) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-success btn-sm">Одобрить</button>
-                                        </form>
-                                        <form action="{{ route('recipes.reject', $recipe) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger btn-sm">Отклонить</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+<div class="card mb-4">
+    <div class="card-header bg-warning">
+        <h1>Ожидающие модерации</h1>
+    </div>
+    <div class="card-body">
+        @if($pendingRecipes->isEmpty())
+            <p>Нет рецептов, ожидающих модерации.</p>
+        @else
+            <div class="list-group">
+                @foreach($pendingRecipes as $recipe)
+                <div class="list-group-item">
+                    <!-- Кликабельный блок рецепта -->
+                    <div class="recipe-block" data-recipe-id="{{ $recipe->id }}" style="cursor: pointer; margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 5px;">
+                        <div class="recipe-content">
+                            <h5>{{ $recipe->title }}</h5>
+                            <p class="mb-1">{{ Str::limit($recipe->description, 100) }}</p>
+                            <small>
+                                Категория: {{ $recipe->category->title }}, 
+                                Время: {{ $recipe->cooking_time }} мин,
+                                Сложность: {{ $recipe->difficulty }},
+                                Порции: {{ $recipe->servings }}
+                            </small>
+                        </div>
                     </div>
-                @endif
+
+                    <!-- Кнопки модерации -->
+                    <div class="mt-2"style="height:70px">
+                        <form action="{{ route('recipes.approve', $recipe) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm">Одобрить</button>
+                        </form>
+                        <form action="{{ route('recipes.reject', $recipe) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">Отклонить</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Оверлей для этого рецепта -->
+                <div class="recipe-overlay" id="overlay-{{ $recipe->id }}" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+                    <div class="overlay-content" style="background: #000; padding: 25px; border-radius: 8px; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative;">
+                        <button class="close-btn" style="position: absolute; top: 10px; right: 10px; font-size: 24px; background: none; border: none; cursor: pointer;">&times;</button>
+                        
+                        <h2>{{ $recipe->title }}</h2>
+                        
+                        @if($recipe->image_url)
+                            <img src="{{ asset($recipe->image_url) }}" alt="{{ $recipe->title }}" style="max-width: 100%; height: auto; margin-bottom: 15px;">
+                             @else
+                        <img src="{{ asset('images/default.webp') }}" class="card-img-top" alt="Default image">
+                        @endif
+                        
+                        <div class="recipe-meta" style="margin-bottom: 15px;">
+                            <p><strong>Категория:</strong> {{ $recipe->category->title }}</p>
+                            <p><strong>Время приготовления:</strong> {{ $recipe->cooking_time }} минут</p>
+                            <p><strong>Сложность:</strong> {{ $recipe->difficulty }}</p>
+                            <p><strong>Порции:</strong> {{ $recipe->servings }}</p>
+                        </div>
+                        
+                        <div class="recipe-description" style="margin-bottom: 15px;">
+                            <h4>Описание</h4>
+                            <p>{{ $recipe->description }}</p>
+                        </div>
+                        
+                        @if($recipe->ingredients->isNotEmpty())
+                        <div class="recipe-ingredients" style="margin-bottom: 15px;">
+                            <h4>Ингредиенты</h4>
+                            <ul>
+                                @foreach($recipe->ingredients as $ingredient)
+                                    <li>{{ $ingredient->name }} - {{ $ingredient->pivot->amount }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        
+                        @if($recipe->steps->isNotEmpty())
+                        <div class="recipe-steps">
+                            <h4>Шаги приготовления</h4>
+                            <ol>
+                                @foreach($recipe->steps as $step)
+                                    <li>{{ $step->description }}</li>
+                                @endforeach
+                            </ol>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
             </div>
-        </div>
-        
+        @endif
+    </div>
+</div>
         <div class="card">
             <div class="card-header bg-success">
                 <h1>Одобренные рецепты</h1>
@@ -201,6 +304,10 @@
     </div>
 </div>
     </footer>
+
+
+
+
     <script>
 function confirmDelete(event, title) {
     if (!confirm('Вы уверены, что хотите удалить рецепт "' + title + '"?')) {
@@ -209,6 +316,36 @@ function confirmDelete(event, title) {
     }
     return true;
 }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Открытие оверлея при клике на рецепт
+    document.querySelectorAll('.recipe-block').forEach(block => {
+        block.addEventListener('click', function(e) {
+            // Проверяем, не был ли клик по кнопке модерации
+            if (!e.target.closest('form')) {
+                const recipeId = this.getAttribute('data-recipe-id');
+                document.getElementById(`overlay-${recipeId}`).style.display = 'flex';
+            }
+        });
+    });
+
+    // Закрытие оверлея
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.recipe-overlay').style.display = 'none';
+        });
+    });
+
+    // Закрытие при клике вне контента
+    document.querySelectorAll('.recipe-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    });
+});
 </script>
 </body>
 </html>

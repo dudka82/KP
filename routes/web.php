@@ -9,14 +9,23 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\SearchController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/best', [HomeController::class, 'topRecipes']);    
 Route::get('/favorite', [FavoriteController::class, 'favoriteRecipes']);
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::middleware(['auth', 'verified'])->group(function() {
+    // Основной маршрут dashboard
+    Route::get('/dashboard', [AccountController::class, 'account'])->name('dashboard');
+    
+    // Другие защищенные маршруты можно добавить здесь
+});
 
 Route::get('/search', [SearchController::class, 'index'], function () {
     return view('search');
@@ -69,8 +78,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/categories/{category}/reject', [CategoryController::class, 'reject'])->name('categories.reject');
     });
 });
-
-
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/recipes', [RecipeController::class, 'index'])->name('recipes.index');

@@ -291,15 +291,15 @@
            <ul>
             <li><a href="/">Главная</a></li>  
             <li><a href="{{ route('dashboard') }}">Личный кабинет</a></li>
-            <li><a href="#">Избранное</a></li>
+            <li><a href="/favorite">Избранное</a></li>
             </ul>
     </div>
     <div class="Finfo">
         <h1>Навигация</h1>
            <ul>
             <li><a href="{{ route('search') }}">Поиск</a></li>
-            <li><a href="#">Лучшее</a></li>
-            <li><a href="#">Добавить рецепт</a></li>
+            <li><a href="/best">Лучшее</a></li>
+            <li><a href="/recipes/create">Добавить рецепт</a></li>
             </ul>
     </div>
 </div>

@@ -56,7 +56,6 @@ public function ingredients()
                 ->withPivot('amount')
                 ->withTimestamps();
 }   
-
 public function steps()
 {
     return $this->hasMany(Step::class)->orderBy('step_number');

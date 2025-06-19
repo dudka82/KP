@@ -12,7 +12,7 @@ class SearchController extends Controller
 {
 public function index()
 {
-    $recipes = Recipe::with(['category', 'ingredients'])->get();
+    $recipes = Recipe::with(['category', 'ingredients'])->where('status', 'approved')->get();
     $categories = Category::all();
     $ingredients = Ingredient::all();
     

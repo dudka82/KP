@@ -23,11 +23,8 @@ class CommentController extends Controller
 }
 
     public function destroy(Comment $comment)
-    {
-     
-        
-        $comment->delete();
-        
+    { 
+        $comment->delete();      
         return back()->with('success', 'Комментарий удален');
     }
 }

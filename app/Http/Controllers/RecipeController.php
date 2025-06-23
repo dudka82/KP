@@ -60,9 +60,10 @@ class RecipeController extends Controller
     
     // Добавляем шаги приготовления
     foreach ($request->steps as $stepNumber => $step) {
-        $recipe->steps()->create([
-            'step_number' => $stepNumber + 1,
-            'description' => $step['description']
+    $recipe->steps()->create([
+        'step_number' => $stepNumber + 1,
+        'description' => $step['description'],
+        'image_url' => $step['image_url'] ?? null // Добавляем URL изображения, если он есть
         ]);
     }
     

@@ -1,52 +1,174 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Регистрация</title>
+</head>
+<style>
+    main{
+        min-height: 100%;
+        min-width: 100%;
+    }
+    .container{
+        padding: 30px;
+        box-sizing:border-box;
+        width: 400px;height: 400px;
+        border-radius:6px;
+        background-color: #0E0E0E;
+        margin: auto;
+        margin-top: 230px;
+        text-align: center;
+    }
+    h1 {
+        text-align: center;
+        color: #fff;
+    }
+    label {
+        display: block;
+        margin: 5px 0;
+        font-size: 14px;
+        color: #fff;
+        text-align: left;
+        margin-left: 60px;
+    }
+    
+    input {
+        width: 220px;
+        padding: 6px;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        box-sizing: border-box;
+        background-color: #030303 !important;
+        color:#fff;
+    }
+    
+    input:focus {
+        background-color: #030303;
+        outline: none;
+    }
+    input:-webkit-autofill{
+        background-color: #030303;   
+    }
+    .buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+        margin-left: 20px;
+        gap:20px;
+    }
+    button{
+        margin: 0;
+        width: 150px;
+    }
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+</style>
+<body>
+<nav>
+    <img src="/images/logo.png" alt="logo" class="logo">
+    <ul>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/favorite">Избранное</a></li>
+        <li><a href="{{ route('search') }}">Поиск</a></li>
+        <li><a href="/best">Лучшее</a></li>
+    </ul>
+    <ul>
+        <li><a href="/recipes/create">Добавить рецепт</a></li>
+        <li>
+            @auth
+                <div class="dropdown">
+                    <div class="user-info">
+                        <span>{{ Auth::user()->name }}</span>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="{{ route('dashboard') }}">Личный кабинет</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <a href="{{ route('logout') }}" 
+                                onclick="event.preventDefault();
+                                this.closest('form').submit();">
+                                Выйти
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a href="{{ route('login') }}">Войти</a>
+            @endauth
+        </li>
+    </ul>
+</nav>
+<main>  
+    <div class="container">
+        <h1>Зарегистрироваться</h1>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+                
+                <div class="form-group">
+                    <label for="name">Имя</label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                    @error('name')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="email">
+                    @error('email')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" required autocomplete="new-password">
+                    @error('password')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                <div class="form-group">
+                    <label for="password_confirmation">Подтверждение пароля</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" required autocomplete="new-password">
+                </div>
+                
+                <div class="buttons">
+                    <a href="{{ route('login') }}" style="font-size:12px">Уже есть аккаунт?</a>
+                    <button type="submit">Зарегистрироваться</button>
+                </div>
+
+            </form>
+    </div>
+</main>
+<footer>
+    <img src="/images/logo.png" alt="logo" class="logo">
+    <div class="SubInfo">
+        <div class="Finfo">
+            <h1>Навигация</h1>
+            <ul>
+                <li><a href="/">Главная</a></li>  
+                <li><a href="{{ route('dashboard') }}">Личный кабинет</a></li>
+                <li><a href="/favorite">Избранное</a></li>
+                </ul>
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="Finfo">
+            <h1>Навигация</h1>
+            <ul>
+                <li><a href="{{ route('search') }}">Поиск</a></li>
+                <li><a href="/best">Лучшее</a></li>
+                <li><a href="/recipes/create">Добавить рецепт</a></li>
+                </ul>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+</footer>
+</body>
+</html>

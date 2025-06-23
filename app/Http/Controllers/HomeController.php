@@ -25,7 +25,7 @@ public function topRecipes()
         ->take(10)
         ->get();
 
-    return view('welcome', compact('topRatedRecipes'));
+    return view('best', compact('topRatedRecipes'));
 }
 
 }
